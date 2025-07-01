@@ -9,3 +9,20 @@ spec:
       targetPort: 9093
   selector:
     app: alertmanager
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: alertmanager
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: alertmanager
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  endpoints:
+    - port: 9093
+      interval: 30s

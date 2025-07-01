@@ -21,6 +21,13 @@ spec:
         - --path.sysfs=/host/sys
         - --path.rootfs=/host/root
         - --no-collector.hwmon
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
         volumeMounts:
         - name: proc
           mountPath: /host/proc

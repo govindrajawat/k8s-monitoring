@@ -1,0 +1,21 @@
+# Sample Ingress for Grafana
+# WARNING: Do NOT use in production without authentication (e.g., OAuth2 proxy, ingress auth, etc.)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: grafana.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000 

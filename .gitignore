@@ -1,0 +1,11 @@
+# Ignore secrets and local files
+*.env
+*.secret.yaml
+*.local.yaml
+*.bak
+*.tmp
+*.swp
+.DS_Store
+node_modules/
+vendor/
+grafana-backup-*/ 

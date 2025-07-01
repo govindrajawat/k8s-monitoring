@@ -25,9 +25,15 @@ spec:
               mountPath: /etc/alertmanager
             - name: alertmanager-storage
               mountPath: /alertmanager
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
       volumes:
         - name: alertmanager-config
           configMap:
             name: alertmanager-config
         - name: alertmanager-storage
-          emptyDir: {}

@@ -154,3 +154,59 @@ data:
       "uid": "0001",
       "version": 1
     }
+  node-metrics.json: |-
+    {
+      "annotations": {"list": []},
+      "editable": true,
+      "gnetId": null,
+      "graphTooltip": 0,
+      "id": 2,
+      "panels": [
+        {
+          "datasource": "Prometheus",
+          "type": "graph",
+          "title": "Node CPU Usage",
+          "targets": [
+            {
+              "expr": "100 - (avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+              "legendFormat": "{{instance}}",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {"format": "percent", "show": true},
+            {"format": "short", "show": true}
+          ],
+          "xaxis": {"show": true},
+          "lines": true,
+          "linewidth": 2
+        },
+        {
+          "datasource": "Prometheus",
+          "type": "graph",
+          "title": "Node Memory Usage",
+          "targets": [
+            {
+              "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
+              "legendFormat": "{{instance}}",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {"format": "percent", "show": true},
+            {"format": "short", "show": true}
+          ],
+          "xaxis": {"show": true},
+          "lines": true,
+          "linewidth": 2
+        }
+      ],
+      "schemaVersion": 27,
+      "style": "dark",
+      "tags": ["node", "metrics"],
+      "templating": {"list": []},
+      "time": {"from": "now-6h", "to": "now"},
+      "title": "Node Metrics",
+      "uid": "node-metrics",
+      "version": 1
+    }

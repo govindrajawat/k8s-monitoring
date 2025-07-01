@@ -1,5 +1,11 @@
 # Kubernetes Monitoring Stack with Prometheus and Grafana
 
+> **⚠️ Security & Setup Warnings:**
+> - This repository contains placeholder secrets and example credentials (e.g., Grafana admin password, Alertmanager SMTP/PagerDuty keys). **You must replace all placeholder values with secure, production-ready credentials before deploying to any real or public cluster.**
+> - The Alertmanager configuration uses example SMTP and PagerDuty settings. Update these in `kustomize/base/alertmanager/alertmanager-configmap.yaml` for real alerting.
+> - The Grafana admin credentials are set in `kustomize/base/grafana/grafana-auth-secret.yaml` as `admin:changeme`. **Change this before production use.**
+> - The `scripts/backup-grafana.sh` script requires `jq` to be installed in the Grafana container. You may need to extend the Grafana image or use a sidecar for this functionality.
+
 This project provides a complete monitoring solution for Kubernetes clusters using Prometheus, Grafana, and related components.
 
 ## Architecture
@@ -37,18 +43,28 @@ Then open:
     Prometheus: http://localhost:9090
     Alertmanager: http://localhost:9093
 
+> **Note:** The default Grafana login is `admin:changeme` (see `kustomize/base/grafana/grafana-auth-secret.yaml`). Change this secret for production.
+
 ## Production Deployment
 
 For production, use the production overlay which includes persistent storage:
     ```bash
     kubectl apply -k kustomize/overlays/prod
 
+## Accessing Services Externally
+
+Sample Ingress manifests are provided for Grafana and Prometheus in the base manifests:
+- `kustomize/base/grafana/grafana-ingress.yaml`
+- `kustomize/base/prometheus/prometheus-ingress.yaml`
+
+> **Security Warning:** Do NOT use these Ingress resources in production without proper authentication (e.g., OAuth2 proxy, ingress auth, etc.). They are for demonstration purposes only.
+
 ## Dashboards
 
 Pre-configured dashboards include:
-    Kubernetes Cluster Overview
-    Node Metrics
-    Pod Resources
+    - Kubernetes Cluster Overview
+    - Node Metrics (see `node-metrics.json` in the dashboards configmap)
+    - Pod Resources
 
 ## Screenshots
 
@@ -60,8 +76,9 @@ For production deployments:
     1. Configure persistent storage for Prometheus and Grafana
     2. Set up proper ingress with authentication
     3. Configure long-term storage for Prometheus (e.g., Thanos or Cortex)
-    4. Set up proper alerting rules in Alertmanager
+    4. Set up proper alerting rules in Alertmanager (update SMTP/PagerDuty in `kustomize/base/alertmanager/alertmanager-configmap.yaml`)
     5. Configure Grafana to use an external database
+    6. **Change all placeholder secrets and credentials before deploying!**
 
 ## Cleanup
 
@@ -70,7 +87,6 @@ To remove all resources:
     kubectl delete -k kustomize/overlays/dev
     # or for production
     kubectl delete -k kustomize/overlays/prod
-text
 
 ## Documentation
 

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prometheus
+spec:
+  replicas: 2
+  serviceName: prometheus
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - prometheus
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: prometheus
+        resources:
+          limits:
+            cpu: "2"
+            memory: "4Gi"
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+        volumeMounts:
+        - name: prometheus-storage
+          mountPath: /prometheus
+  volumeClaimTemplates:
+  - metadata:
+      name: prometheus-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "ssd"
+      resources:
+        requests:
+          storage: 50Gi
